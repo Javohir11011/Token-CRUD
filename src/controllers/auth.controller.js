@@ -4,7 +4,6 @@ import { User } from "../models/index.js";
 export const authRegisterCon = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-
         const userExists = await User.findOne({email});
 
         if (userExists) {
@@ -32,8 +31,7 @@ export const authLoginCon = async (req, res, next) => {
             full_name: 1,
             email: 1,
             password: 1,
-            isSupperAdmin: 1,
-            isAdmin: 1
+            role: 1
         });
 
         if (!user) return res.send("user not found!");
@@ -42,7 +40,8 @@ export const authLoginCon = async (req, res, next) => {
             return res.send("Email or password is not valid");
 
         const token = createTokens({
-            email : user.email
+            email : user.email,
+            role: user.role
         });
         if (!token) {
             return res.send("Error...")
